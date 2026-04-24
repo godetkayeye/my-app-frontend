@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-type LoginResponse = {
+type RegisterResponse = {
   token: string;
   user: {
     id: number;
@@ -15,15 +15,16 @@ type LoginResponse = {
   };
 };
 
-const LOGIN_ENDPOINT = "/api/auth/login";
+const REGISTER_ENDPOINT = "/api/auth/register";
 
-export default function Home() {
+export default function RegisterPage() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<LoginResponse | null>(null);
+  const [result, setResult] = useState<RegisterResponse | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -32,31 +33,31 @@ export default function Home() {
     setResult(null);
 
     try {
-      const response = await fetch(LOGIN_ENDPOINT, {
+      const response = await fetch(REGISTER_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
 
-      const data = (await response.json()) as LoginResponse | { message?: string };
+      const data = (await response.json()) as RegisterResponse | { message?: string };
 
       if (!response.ok) {
         const message =
           "message" in data && data.message
             ? data.message
-            : "Identifiants invalides. Veuillez reessayer.";
+            : "Inscription impossible. Veuillez verifier les informations.";
         throw new Error(message);
       }
 
-      setResult(data as LoginResponse);
-      localStorage.setItem("auth_token", (data as LoginResponse).token);
-      localStorage.setItem("auth_user", JSON.stringify((data as LoginResponse).user));
+      setResult(data as RegisterResponse);
+      localStorage.setItem("auth_token", (data as RegisterResponse).token);
+      localStorage.setItem("auth_user", JSON.stringify((data as RegisterResponse).user));
       router.push("/notes");
     } catch (err) {
       const message =
         err instanceof Error
           ? err.message
-          : "Une erreur est survenue lors de la connexion.";
+          : "Une erreur est survenue lors de l'inscription.";
       setError(message);
     } finally {
       setLoading(false);
@@ -70,13 +71,31 @@ export default function Home() {
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-600">
             My App
           </p>
-          <h1 className="mt-3 text-2xl font-bold text-slate-900">Connexion</h1>
+          <h1 className="mt-3 text-2xl font-bold text-slate-900">Inscription</h1>
           <p className="mt-2 text-sm text-slate-500">
-            Entrez vos identifiants pour acceder a votre espace.
+            Creez votre compte pour acceder a la plateforme.
           </p>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="name"
+              className="mb-1.5 block text-sm font-medium text-slate-700"
+            >
+              Nom complet
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Votre nom complet"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              required
+            />
+          </div>
+
           <div>
             <label
               htmlFor="email"
@@ -107,7 +126,7 @@ export default function Home() {
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="Votre mot de passe"
+              placeholder="Choisissez un mot de passe"
               className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
               required
             />
@@ -118,17 +137,17 @@ export default function Home() {
             disabled={loading}
             className="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {loading ? "Connexion en cours..." : "Se connecter"}
+            {loading ? "Inscription en cours..." : "S'inscrire"}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-slate-600">
-          Vous n&apos;avez pas de compte ?{" "}
+          Vous avez deja un compte ?{" "}
           <Link
-            href="/register"
+            href="/"
             className="font-semibold text-blue-600 transition hover:text-blue-700"
           >
-            Creer un compte
+            Se connecter
           </Link>
         </p>
 
@@ -140,7 +159,7 @@ export default function Home() {
 
         {result && (
           <div className="mt-5 space-y-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
-            <p className="font-semibold">Connexion reussie.</p>
+            <p className="font-semibold">Inscription reussie.</p>
             <p>
               <span className="font-medium">Utilisateur :</span> {result.user.name}
             </p>

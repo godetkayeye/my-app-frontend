@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend Notes App
 
-## Getting Started
+Ce projet est un frontend en `Next.js` + `TailwindCSS` qui permet :
 
-First, run the development server:
+- la connexion utilisateur
+- l'inscription utilisateur
+- la gestion des notes (creer, afficher, modifier, supprimer)
+
+## Ce que fait le frontend
+
+### 1) Connexion (`/`)
+- L'utilisateur entre son email et son mot de passe.
+- Le frontend appelle `POST /api/auth/login` (proxy Next.js).
+- En cas de succes, le token est stocke dans le navigateur, puis redirection vers `/notes`.
+
+### 2) Inscription (`/register`)
+- L'utilisateur cree un compte (`name`, `email`, `password`).
+- Le frontend appelle `POST /api/auth/register`.
+- En cas de succes, token stocke puis redirection vers `/notes`.
+
+### 3) Notes (`/notes`)
+- Page accessible apres authentification.
+- Utilise le token Bearer pour appeler les endpoints proteges.
+- Permet :
+  - creer une note (`POST`)
+  - afficher une note par id (`GET`)
+  - modifier une note (`PUT` ou `PATCH`)
+  - supprimer une note (`DELETE`)
+  - lister les notes deja creees (chargement auto au refresh)
+
+## Architecture des appels API
+
+Le navigateur appelle les routes API Next.js locales, puis Next.js appelle le backend Laravel.
+
+- Cela evite les problemes CORS cote navigateur.
+- Les routes proxy transmettent le header `Authorization: Bearer <token>`.
+
+## Backend attendu
+
+Le backend API Laravel doit tourner sur :
+
+- `http://127.0.0.1:8000`
+
+Endpoints utilises :
+
+- `/api/login`
+- `/api/register`
+- `/api/notes`
+- `/api/notes/:id`
+
+## Lancer le frontend
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Puis ouvrir :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [http://localhost:3000](http://localhost:3000)

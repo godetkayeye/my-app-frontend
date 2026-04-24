@@ -50,9 +50,7 @@ export default function RegisterPage() {
       }
 
       setResult(data as RegisterResponse);
-      localStorage.setItem("auth_token", (data as RegisterResponse).token);
-      localStorage.setItem("auth_user", JSON.stringify((data as RegisterResponse).user));
-      router.push("/notes");
+      router.replace("/");
     } catch (err) {
       const message =
         err instanceof Error

@@ -1,4 +1,4 @@
-const BACKEND_NOTES_BASE_ENDPOINT = "http://127.0.0.1:8000/api/notes";
+const BACKEND_NOTES_BASE_ENDPOINT = "http://127.0.0.1:8000/api/tasks";
 
 function getAuthHeader(request: Request) {
   const authHeader = request.headers.get("authorization");

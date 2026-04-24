@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { useAuthState } from "./providers/app-state-provider";
 
 type LoginResponse = {
   token: string;
@@ -19,6 +20,7 @@ const LOGIN_ENDPOINT = "/api/auth/login";
 
 export default function Home() {
   const router = useRouter();
+  const { login } = useAuthState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -49,8 +51,7 @@ export default function Home() {
       }
 
       setResult(data as LoginResponse);
-      localStorage.setItem("auth_token", (data as LoginResponse).token);
-      localStorage.setItem("auth_user", JSON.stringify((data as LoginResponse).user));
+      login((data as LoginResponse).token, (data as LoginResponse).user);
       router.push("/notes");
     } catch (err) {
       const message =

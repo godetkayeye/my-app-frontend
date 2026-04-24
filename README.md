@@ -1,10 +1,10 @@
-# Frontend Notes App
+# Frontend Tasks App
 
 Ce projet est un frontend en `Next.js` + `TailwindCSS` qui permet :
 
 - la connexion utilisateur
 - l'inscription utilisateur
-- la gestion des notes (creer, afficher, modifier, supprimer)
+- la gestion des taches (creer, afficher, modifier, supprimer)
 
 ## Ce que fait le frontend
 
@@ -18,15 +18,15 @@ Ce projet est un frontend en `Next.js` + `TailwindCSS` qui permet :
 - Le frontend appelle `POST /api/auth/register`.
 - En cas de succes, token stocke puis redirection vers `/notes`.
 
-### 3) Notes (`/notes`)
+### 3) Taches (`/notes`)
 - Page accessible apres authentification.
 - Utilise le token Bearer pour appeler les endpoints proteges.
 - Permet :
-  - creer une note (`POST`)
-  - afficher une note par id (`GET`)
-  - modifier une note (`PUT` ou `PATCH`)
-  - supprimer une note (`DELETE`)
-  - lister les notes deja creees (chargement auto au refresh)
+  - creer une tache (`POST`)
+  - afficher une tache par id (`GET`)
+  - modifier une tache (`PUT` ou `PATCH`)
+  - supprimer une tache (`DELETE`)
+  - lister les taches deja creees (chargement auto au refresh)
 
 ## Architecture des appels API
 
@@ -45,8 +45,8 @@ Endpoints utilises :
 
 - `/api/login`
 - `/api/register`
-- `/api/notes`
-- `/api/notes/:id`
+- `/api/tasks`
+- `/api/tasks/:id`
 
 ## Lancer le frontend
 
